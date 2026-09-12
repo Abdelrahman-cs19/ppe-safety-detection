@@ -179,6 +179,20 @@ for the correct install command for your CUDA version, then
 `pip install torch torchvision --force-reinstall` with that command
 before re-installing the rest of `requirements.txt`.
 
+### Quickstart with the pretrained model (skip training)
+
+Don't want to train from scratch? Download the already-trained model
+from **[Releases → v1.0.0](https://github.com/Abdelrahman-cs19/ppe-safety-detection/releases/tag/v1.0.0)**,
+place it at `models/ppe_yolo.pt`, and go straight to the live demo:
+
+```bash
+python -m scripts.webcam_demo --source 0
+```
+
+(Model card: YOLOv8s fine-tuned on the Roboflow 100 Construction Safety
+dataset. Precision 0.86, Recall 0.89, mAP50 0.93, mAP50-95 0.51 — full
+details on the release page.)
+
 ---
 
 ## 5. Milestone 1 — Dataset + YOLO training
@@ -341,4 +355,3 @@ wrapping Ultralytics' built-in ByteTrack (`model.track()` instead of
 association and rule-confirmation logic need, since "this violation
 persisted for 15 frames" only makes sense once we know it's the *same*
 worker across those frames.
-
