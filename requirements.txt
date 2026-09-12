@@ -1,0 +1,20 @@
+# --- Core ML / CV ---
+ultralytics==8.3.*          # YOLO (train/val/predict) + built-in ByteTrack
+opencv-python==4.10.*
+numpy==1.26.*
+torch==2.4.*                # CPU or CUDA build — install the right wheel for your GPU
+torchvision==0.19.*
+
+# --- App / dashboard (added in later milestones, pinned now for a stable env) ---
+streamlit==1.38.*
+sqlalchemy==2.0.*
+python-telegram-bot==21.*
+
+# --- Utilities ---
+PyYAML==6.0.*
+python-dotenv==1.0.*
+pandas==2.2.*
+matplotlib==3.9.*
+seaborn==0.13.*             # confusion matrix plotting in the eval milestone
+pytest==8.3.*
+huggingface_hub==0.25.*      # only needed for scripts/download_reference_model.py

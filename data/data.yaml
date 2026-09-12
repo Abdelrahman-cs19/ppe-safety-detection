@@ -1,0 +1,20 @@
+# Ultralytics dataset config — matches the Roboflow export in data/raw/
+# (train/valid/test, each with images/ + labels/, 5 classes with
+# violations labeled directly rather than only PPE presence).
+#
+# NOTE: `path` is absolute rather than relative to this file. Ultralytics
+# resolves relative `path` values against its global settings.json
+# datasets_dir, NOT against this yaml's own folder — so a relative path
+# here silently looks in the wrong place. Update this if the project
+# folder ever moves.
+path: D:/code/ppe-safety-milestone1/ppe-safety/data/raw
+train: train/images
+val: valid/images
+test: test/images
+
+names:
+  0: helmet
+  1: no-helmet
+  2: no-vest
+  3: person
+  4: vest

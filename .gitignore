@@ -1,0 +1,24 @@
+# Environments
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+
+# Data & model artifacts (too large / private for git — document how to
+# regenerate them in README.md instead)
+data/raw/
+data/processed/*.db
+data/violation_screenshots/
+models/*.pt
+runs/
+
+# Logs
+logs/*.log
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
