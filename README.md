@@ -92,35 +92,38 @@ project will keep following:
 
 ---
 
-## 2. Dataset recommendation
+## 2. Dataset
 
-Your target classes are **person, helmet, safety_vest, gloves,
-safety_glasses**. No single widely-used public dataset covers all five
-well — most construction-PPE datasets are strong on person/helmet/vest
-but weak or missing on gloves and glasses. Plan on combining sources:
+**Source:** [Construction Safety (v1, release-640)](https://universe.roboflow.com/roboflow-100/construction-safety-gsnvb/dataset/1)
+by **Roboflow 100**, via Roboflow Universe.
 
-| Source | Good for | Notes |
-|---|---|---|
-| **Roboflow Universe** — search "construction site safety", "PPE detection", "hard hat detection" | person, helmet, vest (and often "NO-helmet"/"NO-vest" negative classes) | Largest and easiest option: pick a dataset, export it in **YOLOv8** format, and you get an `images/`+`labels/` folder and a ready `data.yaml` directly. Several community datasets already merge multiple sources. |
-| **Kaggle — "Hard Hat Workers Dataset"** | person, helmet | Good supplemental helmet data; originally VOC/XML — needs conversion to YOLO `.txt` (Roboflow can do this conversion for you if you re-upload it there). |
-| **Academic PPE datasets with gloves/glasses** (e.g. search for "SH17" or similar recent human-safety-PPE papers on Papers-with-Code / GitHub) | gloves, safety_glasses | These classes are the hard part. Availability and licenses change, so search Papers-with-Code / GitHub / Roboflow Universe directly for the current best option rather than trusting a single hardcoded link — verify the license allows your use case before training. |
-| **Self-annotated top-up set** | gloves, safety_glasses | If public data for these two classes is thin, annotate a few hundred extra images yourself (Roboflow's annotate tool or CVAT/LabelImg) and merge them in. Even 300-500 well-chosen images per rare class meaningfully helps. |
+- **License:** CC BY 4.0 (attribution required — credited here and in code comments; no redistribution of the raw dataset in this repo)
+- **1,206 images**, split 83% train / 10% valid / 7% test
+- **5 classes**, exported in YOLOv8 format: `helmet, no-helmet, no-vest, person, vest`
+- Preprocessing: auto-orient applied, images resized to 640x640. No augmentation baked into the export — augmentation is applied at training time instead (see `scripts/train.py`).
 
-**Practical recommendation:** start with one solid Roboflow Universe
-"construction PPE" dataset for person/helmet/vest, get the pipeline
-working end-to-end with those 3 classes first, then extend to 5 classes
-once gloves/glasses data is merged in. This matches "build
-incrementally" — you don't need all 5 classes perfectly labeled before
-Milestone 2.
+Note this dataset labels **violations directly** (`no-helmet`, `no-vest`)
+rather than only labeling PPE presence and inferring absence — see the
+note in `config/config.py` (`VIOLATION_CLASSES`) for how that shapes
+the rule engine design in later milestones. It does not include
+gloves or safety_glasses, which were in the original project scope;
+see the "Extending the dataset" note below if you want to add them.
 
-**Merging datasets in YOLO format:** since every YOLO dataset is just
-`images/` + `labels/*.txt` with integer class IDs, merging two datasets
-means: (1) remap each dataset's class IDs to your unified `CLASS_NAMES`
-order in `config/config.py`, (2) copy images into `data/raw/ppe_dataset/images/{train,val}`,
-(3) copy the remapped label files into the matching `labels/{train,val}`
-folder, keeping identical filenames (`img001.jpg` ↔ `img001.txt`). A
-small remap script is easy to add once you've picked your sources — say
-the word and we'll write one in the next step.
+**Getting the data yourself:** since the raw images/labels aren't
+committed to this repo (see `.gitignore` — datasets don't belong in
+git), download it directly from the link above: click "Download
+Dataset" → choose the **YOLOv8** format → extract into
+`data/raw/` so you end up with `data/raw/{train,valid,test}/{images,labels}/`,
+matching what `data/data.yaml` expects.
+
+**Extending the dataset (gloves/safety_glasses, or more `no-helmet` examples):**
+this single dataset has a notable class imbalance — `no-helmet` is only
+~1.7% of all labeled instances (129 of ~7,724), which measurably
+weakens recall on that class (see the Results section above). To
+improve on this:
+- Search Roboflow Universe for supplemental "no helmet violation" or "hard hat violation" datasets and merge them in (remap class IDs, keep matching filenames)
+- Use `scripts/oversample_minority_classes.py` as a quick partial mitigation while sourcing more real data
+- For gloves/safety_glasses specifically, no dataset here covers them yet — a second merge or self-annotated top-up set would be needed to extend beyond the current 5 classes
 
 ---
 
